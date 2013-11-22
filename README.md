@@ -1,6 +1,6 @@
-#h1 image-preloader
+# image-preloader
 
-#h2 A simple jquery sequential image preloader
+## A simple jquery sequential image preloader
 
 This was first inspirated by [imgpreloader](https://github.com/FiNGAHOLiC/jquery.imgpreloader)
 
