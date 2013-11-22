@@ -66,7 +66,7 @@ ImagePreloader.prototype = {
 
   },
 
-  start:function(start){
+  start:function(){
     if(this.sizes.length == this.to_load.length) this.accurate = true;
 
     if(this.event_handlers){
