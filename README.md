@@ -2,9 +2,18 @@
 
 ## A simple jquery sequential image preloader
 
-This was first inspirated by [imgpreloader](https://github.com/FiNGAHOLiC/jquery.imgpreloader)
+This was initially inspirated by [imgpreloader](https://github.com/FiNGAHOLiC/jquery.imgpreloader)
 
-The main 2 differences are sequential preloading and (when possible) more accurate progress/percentage tracking.
+The 2 main differences are:
+
+- sequential preloading 
+- (when possible) more accurate progress/percentage tracking.
+
+"When possible" because it checks Content-Length headers, but not always servers broadcast that header.
+If Content-Length is available, every progress is accurate. Every image is represented by the right fraction of the overall size.
+Otherwise, for ex. if I have 3 images, every image will represented as 1/3.
+
+
 
 ### Basic usage
 
