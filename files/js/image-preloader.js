@@ -9,7 +9,7 @@
 //"loading": index, loaded array, broken array
 //"load": image, index, perc, loaded array, broken array
 //"error": image, index, loaded array, broken array
-//"complete": indexx, loaded array, broken array
+//"complete": index, loaded array, broken array
 
 var ImagePreloader = function(to_load, event_handlers) {
   if(!to_load || to_load.length === 0) return false;
