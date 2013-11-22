@@ -21,23 +21,60 @@ ImagePreloader.prototype = {
   init:function(to_load,event_handlers){
 
     this.to_load = to_load;
+    this.event_handlers = event_handlers;
     this.events = ['onfirst','onloading','onload','oncomplete','onerror'];
 
     $.each(this.events,function(index,event){
       this[event] = $.Callbacks();
     }.bind(this));
 
-    this.loaded = [];
-    this.broken = [];
+    this.sizes = [];
+    this.accurate = false;
+    this.bytes_total = 0;
+    this.bytes_loaded = 0;
+    this.loaded_images = [];
+    this.broken_images = [];
 
-    if(event_handlers){
-      this.add_events(event_handlers);
+    this.get_sizes();
+    //see this.start();
+  },//end init
+
+  get_sizes:function(){
+
+    var deferreds = [];
+
+    $.each(this.to_load,function(index,item){
+      deferreds.push(
+        $.ajax({
+          type: "HEAD",
+          url: item
+        })
+      );
+    }.bind(this));
+
+    $.when.apply($,deferreds).done(function(){
+      $.each(arguments,function(index,item){
+        var size = parseInt(item[2].getResponseHeader('Content-Length'));
+        if(!size) return false;//the server doesn't return Content-Length header
+        this.sizes.push(size);
+        this.bytes_total += size;
+      }.bind(this));
+
+    }.bind(this)).fail(function(){
+      $.each(deferreds,function(index,ajax){ ajax.abort(); });//end all running requests
+    }).always(this.start.bind(this));
+
+  },
+
+  start:function(start){
+    if(this.sizes.length == this.to_load.length) this.accurate = true;
+
+    if(this.event_handlers){
+      this.add_events(this.event_handlers);
       //So I've already got event handlers: I can start preloading
       this.preload(0);
     }
-
-  },//end init
-
+  },
 
   add_events:function(event_handlers){
     $.each(event_handlers,function(event,handler){
@@ -54,7 +91,7 @@ ImagePreloader.prototype = {
     var i = index || 0;
 
     if(index > this.to_load.length-1){
-      this.oncomplete.fire(index-1,this.loaded,this.broken);
+      this.oncomplete.fire(index-1,this.loaded_images,this.broken_images);
     } else {
       this.load_image(index);
     }
@@ -62,23 +99,31 @@ ImagePreloader.prototype = {
 
   load_image:function(index){
 
-    this.onloading.fire(index,this.loaded,this.broken);
+    this.onloading.fire(index,this.loaded_images,this.broken_images);
 
     $('<img>').on('load', function(e){
 
       var image = $(e.target);
-      this.loaded.push(image);
+      this.loaded_images.push(image);
 
-      this.onload.fire(image, index, Math.floor((index+1) / this.to_load.length * 100), this.loaded, this.broken);
-      if(index === 0) this.onfirst.fire(image, Math.floor((index+1) / this.to_load.length * 100));
+      var ratio = null;
+      if(this.accurate){
+        this.bytes_loaded += this.sizes[index];
+        ratio = Math.floor((this.bytes_loaded/this.bytes_total)*10)/10;
+      } else {
+        ratio = Math.floor((index+1) / this.to_load.length * 100);
+      }
+
+      this.onload.fire(image, index, ratio, this.loaded_images, this.broken_images);
+      if(index === 0) this.onfirst.fire(image, ratio);
 
       this.preload(index+1);
 
     }.bind(this)).on('error', function(e){
       var image = $(e.target);
-      this.broken.push(image);
+      this.broken_images.push(image);
 
-      this.onerror.fire(image,index,this.loaded,this.broken);
+      this.onerror.fire(image,index,this.loaded_images,this.broken_images);
 
       this.preload(index+1);
 
