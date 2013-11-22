@@ -2,9 +2,18 @@
 
 ## A simple jquery sequential image preloader
 
-This was first inspirated by [imgpreloader](https://github.com/FiNGAHOLiC/jquery.imgpreloader)
+This was initially inspirated by [imgpreloader](https://github.com/FiNGAHOLiC/jquery.imgpreloader)
 
-The main 2 differences are sequential preloading and (when possible) more accurate progress/percentage tracking.
+The 2 main differences are:
+
+- sequential preloading 
+- (when possible) more accurate progress/percentage tracking.
+
+"When possible" because it checks Content-Length headers, but not always servers broadcast that header.
+If Content-Length is available, every progress is accurate. Every image is represented by the right fraction of the overall size.
+Otherwise, for ex. if I have 3 images, every image will represented as 1/3.
+
+
 
 ### Basic usage
 
@@ -25,6 +34,34 @@ var preloader = new ImagePreloader(files,{
 
 And so on.. It has also events listeners for 'first' (first file has loaded), 'loading' (before a file starts loading), 'error'
 
-Please see source. I'll write more accurate docs.
+You don't have to necessarily pass event handlers directly to the constructor. 
+Passing them to the constructor makes the ImagePreloader instance immediately start preloading passed images.
+Otherwise, you will have to manually start the preloader.
+
+```javascript
+
+var files = ["files/images/img1.png","files/images/img2.png","files/images/img3.png"];
+
+var preloader = new ImagePreloader(files);
+
+preloader.add_event('complete',function(index,loaded_array,loaded_array){
+	console.log('complete!');
+});
+
+/* or */
+
+preloader.add_events({
+	'first':function(image, perc){
+		console.log('first loaded!');
+	},
+	'load':function(image,index,perc,loaded_array,loaded_array){
+		console.log(image,index,perc);
+	}
+});
+
+preloader.preload();
+
+```
+
 
 
