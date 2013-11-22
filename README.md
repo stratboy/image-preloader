@@ -6,7 +6,7 @@ This was first inspirated by [imgpreloader](https://github.com/FiNGAHOLiC/jquery
 
 The main 2 differences are sequential preloading and (when possible) more accurate progress/percentage tracking.
 
-#h3 Basic usage
+### Basic usage
 
 ```javascript
 
