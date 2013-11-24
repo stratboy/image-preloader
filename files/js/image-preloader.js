@@ -13,34 +13,26 @@
 
 var ImagePreloader = function(to_load, event_handlers) {
   if(!to_load || to_load.length === 0) return false;
-  this.init(to_load, event_handlers);
+  this.to_load = to_load;
+  this.event_handlers = event_handlers;
+  this.events = ['onfirst','onloading','onload','oncomplete','onerror'];
+  $.each(this.events,function(index,event){
+    this[event] = $.Callbacks();
+  }.bind(this));
+
+  this.sizes = [];
+  this.accurate = false;
+  this.bytes_total = 0;
+  this.bytes_loaded = 0;
+  this.loaded_images = [];
+  this.broken_images = [];
+
+  this.init();
 };
 
 ImagePreloader.prototype = {
 
   init:function(to_load,event_handlers){
-
-    this.to_load = to_load;
-    this.event_handlers = event_handlers;
-    this.events = ['onfirst','onloading','onload','oncomplete','onerror'];
-
-    $.each(this.events,function(index,event){
-      this[event] = $.Callbacks();
-    }.bind(this));
-
-    this.sizes = [];
-    this.accurate = false;
-    this.bytes_total = 0;
-    this.bytes_loaded = 0;
-    this.loaded_images = [];
-    this.broken_images = [];
-
-    this.get_sizes();
-    //see this.start();
-  },//end init
-
-  get_sizes:function(){
-
     var deferreds = [];
 
     $.each(this.to_load,function(index,item){
@@ -63,8 +55,8 @@ ImagePreloader.prototype = {
     }.bind(this)).fail(function(){
       $.each(deferreds,function(index,ajax){ ajax.abort(); });//end all running requests
     }).always(this.start.bind(this));
+  },//end init
 
-  },
 
   start:function(){
     if(this.sizes.length == this.to_load.length) this.accurate = true;
