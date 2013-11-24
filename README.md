@@ -2,7 +2,7 @@
 
 ## A simple jquery sequential image preloader
 
-This was initially inspirated by [imgpreloader](https://github.com/FiNGAHOLiC/jquery.imgpreloader)
+This was initially inspired by [imgpreloader](https://github.com/FiNGAHOLiC/jquery.imgpreloader)
 
 The 2 main differences are:
 
