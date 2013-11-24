@@ -12,10 +12,12 @@
 //"complete": index, loaded array, broken array
 
 var ImagePreloader = function(to_load, event_handlers) {
+
   if(!to_load || to_load.length === 0) return false;
   this.to_load = to_load;
   this.event_handlers = event_handlers;
-  this.events = ['onfirst','onloading','onload','oncomplete','onerror'];
+  this.events = ['first','loading','load','complete','error'];
+
   $.each(this.events,function(index,event){
     this[event] = $.Callbacks();
   }.bind(this));
@@ -75,8 +77,8 @@ ImagePreloader.prototype = {
   },
 
   add_event:function(event,handler){
-      if(!this['on'+event]) return false;
-      this['on'+event].add(handler);
+      if(!this[event]) return false;
+      this[event].add(handler);
   },
 
   preload:function(index){
