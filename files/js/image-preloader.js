@@ -5,18 +5,18 @@
 //event_handlers (object): { 'load': function(image, index, perc, loaded_array, broken_array){}, [...] }
 
 //event_handlers args:
-//"first": image, perc
-//"loading": index, loaded array, broken array
-//"load": image, index, perc, loaded array, broken array
-//"error": image, index, loaded array, broken array
-//"complete": index, loaded array, broken array
+//"onfirst": image, perc
+//"onloading": index, loaded array, broken array
+//"onload": image, index, perc, loaded array, broken array
+//"onerror": image, index, loaded array, broken array
+//"oncomplete": index, loaded array, broken array
 
 var ImagePreloader = function(to_load, event_handlers) {
 
   if(!to_load || to_load.length === 0) return false;
   this.to_load = to_load;
   this.event_handlers = event_handlers;
-  this.events = ['first','loading','load','complete','error'];
+  this.events = ['onfirst','onloading','onload','oncomplete','onerror'];
 
   $.each(this.events,function(index,event){
     this[event] = $.Callbacks();
