@@ -12,7 +12,6 @@
 //"oncomplete": index, loaded array, broken array
 
 var ImagePreloader = function(to_load, event_handlers) {
-
   if(!to_load || to_load.length === 0) return false;
   this.to_load = to_load;
   this.event_handlers = event_handlers;
@@ -108,7 +107,6 @@ ImagePreloader.prototype = {
         ratio = Math.floor((index+1) / this.to_load.length * 100);
       }
 
-      console.log(this.to_load);
       this.onload.fire(image, index, ratio, this.loaded_images, this.to_load[index], this.broken_images);
       if(index === 0) this.onfirst.fire(image, ratio);
 
