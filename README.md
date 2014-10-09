@@ -6,7 +6,7 @@ This was initially inspired by [imgpreloader](https://github.com/FiNGAHOLiC/jque
 
 The 2 main differences are:
 
-- sequential preloading 
+- sequential preloading
 - (when possible) more accurate progress/percentage tracking.
 
 "When possible" because it checks Content-Length headers, but not always servers broadcast that header.
@@ -22,8 +22,8 @@ Otherwise, for ex. if I have 3 images, every image will represented as 1/3.
 var files = ["files/images/img1.png","files/images/img2.png","files/images/img3.png"];
 
 var preloader = new ImagePreloader(files,{
-	'load':function(image,index,perc,loaded_array,loaded_array){
-		console.log(image,index,perc);
+	'load':function(image_tag,index,perc,loaded_array,image_path,error){
+		console.log(image_tag,image_path,index,perc);
 	},
 	'complete':function(index,loaded_array,loaded_array){
 		console.log('complete!');
@@ -34,7 +34,7 @@ var preloader = new ImagePreloader(files,{
 
 And so on.. It has also events listeners for 'first' (first file has loaded), 'loading' (before a file starts loading), 'error'
 
-You don't have to necessarily pass event handlers directly to the constructor. 
+You don't have to necessarily pass event handlers directly to the constructor.
 Passing them to the constructor makes the ImagePreloader instance immediately start preloading passed images.
 Otherwise, you will have to manually start the preloader.
 
@@ -54,8 +54,8 @@ preloader.add_events({
 	'first':function(image, perc){
 		console.log('first loaded!');
 	},
-	'load':function(image,index,perc,loaded_array,loaded_array){
-		console.log(image,index,perc);
+	'load':function(image_tag,index,perc,loaded_array,image_path,error){
+		console.log(image_tag,image_path,index,perc);
 	}
 });
 
