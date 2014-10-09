@@ -108,7 +108,8 @@ ImagePreloader.prototype = {
         ratio = Math.floor((index+1) / this.to_load.length * 100);
       }
 
-      this.onload.fire(image, index, ratio, this.loaded_images, this.broken_images);
+      console.log(this.to_load);
+      this.onload.fire(image, index, ratio, this.loaded_images, this.to_load[index], this.broken_images);
       if(index === 0) this.onfirst.fire(image, ratio);
 
       this.preload(index+1);
