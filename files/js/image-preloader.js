@@ -2,7 +2,7 @@
 
 //params:
 //to_load (array of strings): images paths
-//event_handlers (object): { 'load': function(image, index, perc, loaded_array, broken_array){}, [...] }
+//event_handlers (object): { 'load': function(image, index, perc, loaded_array, image_path, broken_array){}, [...] }
 
 //event_handlers args:
 //"onfirst": image, perc
