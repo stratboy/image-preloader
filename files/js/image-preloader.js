@@ -37,6 +37,7 @@ ImagePreloader.prototype = {
     var deferreds = [];
 
     $.each(this.to_load,function(index,item){
+
       deferreds.push(
         $.ajax({
           type: "HEAD",
@@ -46,7 +47,9 @@ ImagePreloader.prototype = {
     }.bind(this));
 
     $.when.apply($,deferreds).done(function(){
+
       $.each(arguments,function(index,item){
+        if(!item) return false;//item is undefined
         var size = parseInt(item[2].getResponseHeader('Content-Length'));
         if(!size) return false;//the server doesn't return Content-Length header
         this.sizes.push(size);
@@ -60,6 +63,7 @@ ImagePreloader.prototype = {
 
 
   start:function(){
+
     if(this.sizes.length == this.to_load.length) this.accurate = true;
 
     if(this.event_handlers){
