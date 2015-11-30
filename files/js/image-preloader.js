@@ -112,10 +112,8 @@ ImagePreloader.prototype = {
       }
 
       this.onload.fire(image, index, ratio, this.loaded_images, this.to_load[index], this.broken_images);
-      if(index === 0) this.onfirst.fire(image, ratio);
-
+      if(index === 0) this.onfirst.fire(image, this.to_load[index], ratio);
       this.preload(index+1);
-
     }.bind(this)).on('error', function(e){
       var image = $(e.target);
       this.broken_images.push(image);
