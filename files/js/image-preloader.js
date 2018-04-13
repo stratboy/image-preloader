@@ -2,16 +2,17 @@
 
 //params:
 //to_load (array of strings): images paths
-//event_handlers (object): { 'load': function(image, index, perc, loaded_array, image_path, broken_array){}, [...] }
+//event_handlers (object): { 'load': function(image, index, perc, loaded_array, broken_array){}, [...] }
 
 //event_handlers args:
 //"onfirst": image, perc
-//"onloading": index, loaded array, broken array
-//"onload": image, index, perc, loaded array, broken array
-//"onerror": image, index, loaded array, broken array
-//"oncomplete": index, loaded array, broken array
+//"onloading": index, list, broken
+//"onload": image, index, ratio, list, url, broken
+//"onerror": image, index, list, broken array
+//"oncomplete": index, list, broken
 
 var ImagePreloader = function(to_load, event_handlers) {
+
   if(!to_load || to_load.length === 0) return false;
   this.to_load = to_load;
   this.event_handlers = event_handlers;
@@ -34,10 +35,10 @@ var ImagePreloader = function(to_load, event_handlers) {
 ImagePreloader.prototype = {
 
   init:function(to_load,event_handlers){
+
     var deferreds = [];
 
     $.each(this.to_load,function(index,item){
-
       deferreds.push(
         $.ajax({
           type: "HEAD",
@@ -63,7 +64,6 @@ ImagePreloader.prototype = {
 
 
   start:function(){
-
     if(this.sizes.length == this.to_load.length) this.accurate = true;
 
     if(this.event_handlers){
@@ -114,6 +114,7 @@ ImagePreloader.prototype = {
       this.onload.fire(image, index, ratio, this.loaded_images, this.to_load[index], this.broken_images);
       if(index === 0) this.onfirst.fire(image, this.to_load[index], ratio);
       this.preload(index+1);
+
     }.bind(this)).on('error', function(e){
       var image = $(e.target);
       this.broken_images.push(image);
